@@ -4,10 +4,8 @@ import {useDispatch, useSelector} from "react-redux";
 
 // Common
 import mapIcon from "../../assets/icons/mapIcon.png"
-import { Users } from "../../components/Users/Users";
 import { Header } from "../../components/Header/Header";
 import { Server } from "../../components/Server/Server";
-import { Vectors } from "../../components/Vectors/Vectors";
 import { UserInput } from "../../components/UserInput/UserInput";
 import { ServerInput } from "../../components/ServerInput/ServerInput";
 import { TimeReports } from "../../components/TimeReports/TimeReports";
@@ -20,6 +18,9 @@ import { arrayOfUsers } from "../../data/usersData";
 import { arrayOfServers } from "../../data/serverDatas";
 import { arrayOfTimeReports } from "../../data/timeReportData";
 import { setMapSize, setShowLatency} from "../../redux/slices/dataSlice";
+
+const LazyUsers = React.lazy(() => import("../../components/Users/Users"))
+const LazyVectors = React.lazy(() => import("../../components/Vectors/Vectors"))
 
 
 export const Main = () => {
@@ -36,14 +37,18 @@ export const Main = () => {
   const renderSelectedUsers = arrayOfUsers.map((item) => {
     const isUserSelected = usersValue.some((user) => user.name === item.name);
     return isUserSelected ? (
-      <Users
-        key={item.name}
-        styles={usersStyles.find((i) => i.name === item.name)}
-        top={item.topUser}
-        left={item.leftUser}
-        name={item.name}
-        latency={resultArray(data) && resultArray(data).find((i) => i.name.includes(item.name))}
-      />
+      <React.Fragment key={item.name}>
+        <React.Suspense fallback={<></>}>
+          <LazyUsers
+            styles={usersStyles.find((i) => i.name === item.name)}
+            key={item.name}
+            top={item.topUser}
+            left={item.leftUser}
+            name={item.name}
+            latency={resultArray(data) && resultArray(data).find((i) => i.name.includes(item.name))}
+          />
+        </React.Suspense>
+      </React.Fragment>
     ) : (
       !usersLoaded &&
       <UserInput
@@ -130,7 +135,9 @@ export const Main = () => {
         <>
           {!showLatency && <Header/>}
           {map}
-          <Vectors array={resultArray(data)}/>
+          <React.Suspense fallback={<></>}>
+            <LazyVectors array={resultArray(data)}/>
+          </React.Suspense>
           {renderContent}
           {showLatency && renderTimeReports}
         </>

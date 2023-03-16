@@ -11,7 +11,7 @@ import large from "../../assets/icons/large.png";
 import largeMask from "../../assets/icons/large_mask.png";
 import { otherStyles } from "./UsersStyles"
 
-export const Users = ({left, top, styles, name, latency}) => {
+const Users = ({left, top, styles, name, latency}) => {
   const { usersValue, mapSize } = useSelector(state => state.data);
   const currentCount = usersValue.find((item) => item.name === name);
 
@@ -86,3 +86,5 @@ export const Users = ({left, top, styles, name, latency}) => {
     </div>
   );
 };
+
+export default Users;

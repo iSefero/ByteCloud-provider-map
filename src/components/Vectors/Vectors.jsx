@@ -5,7 +5,7 @@ import React from "react"
 import {arrayOfVectors} from "../../data/vectorsData";
 import {styles} from "./VectorStyles";
 
-export const Vectors = ({array}) => {
+const Vectors = ({array}) => {
 
   const filteredArray = arrayOfVectors.filter((item) => {
     const countObj = array.find((nameObj) => nameObj.name === item.name);
@@ -56,3 +56,5 @@ export const Vectors = ({array}) => {
     <>{renderVectors}</>
   )
 }
+
+export default Vectors;
